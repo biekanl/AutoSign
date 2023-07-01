@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.unbug.autosign.mapper.SignInUserMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="SignInUserResultMap" type="cn.unbug.autosign.entity.SignInUser">
+        <id column="id" property="id"/>
+        <result column="account_number" property="accountNumber"/>
+        <result column="pass_word" property="passWord"/>
+        <result column="push_token" property="pushToken"/>
+        <result column="wx_push" property="wxPush"/>
+        <result column="address" property="address"/>
+        <result column="clock_in_time" property="clockInTime"/>
+        <result column="daily" property="daily"/>
+        <result column="weekly" property="weekly"/>
+        <result column="monthly" property="monthly"/>
+        <result column="status" property="status"/>
+        <result column="superior" property="superior"/>
+        <result column="revision" property="revision"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="updated_by" property="updatedBy"/>
+        <result column="updated_time" property="updatedTime"/>
+    </resultMap>
+
+    <!--根据账号查询客户-->
+    <select id="selectUserByAccountNumber" resultMap="SignInUserResultMap">
+        select t.*
+        from sign_in_user t
+        where t.account_number = #{account_number}
+    </select>
+
+    <!--查询待签约的客户-->
+    <select id="inquireAboutCustomersToPunchIn" resultMap="SignInUserResultMap">
+        select s.*
+        from sign_in_user s
+        inner join sys_user u on u.phone = s.superior
+        inner join check_in_time c on c.sign_id = s.id
+        where u.status = '0' and s.status = '0'
+        and c.week = weekday(now())
+        and str_to_date(s.expiration_time, '%Y-%m-%d') >= current_date ()
+        <if test="id != null and id != ''">
+            and s.id = #{id}
+        </if>
+    </select>
+
+    <!--获取汇报用户-->
+    <select id="queryReportJobByCode" resultType="cn.unbug.autosign.entity.SignInUser">
+        select s.*
+        from sign_in_user s
+        inner join sys_user u on u.phone = s.superior
+        where u.status = '0' and s.status = '0'
+        and str_to_date(s.expiration_time, '%Y-%m-%d') >= current_date ()
+        and exists(select 1 from sign_report r where r.superior = s.superior)
+        <if test="type != null and type == 'daily'.toString()">
+            and s.daily = '0'
+        </if>
+        <if test="type != null and type == 'weekly'.toString()">
+            and s.weekly = '0'
+        </if>
+        <if test="type != null and type == 'monthly'.toString()">
+            and s.monthly = '0'
+        </if>
+    </select>
+</mapper>

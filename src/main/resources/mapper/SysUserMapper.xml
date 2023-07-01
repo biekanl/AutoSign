@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.unbug.autosign.mapper.SysUserMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="SysUserResultMap" type="cn.unbug.autosign.entity.SysUser">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="pass_word" property="passWord"/>
+        <result column="phone" property="phone"/>
+        <result column="push_token" property="pushToken"/>
+        <result column="number_of_consumptions" property="numberOfConsumptions"/>
+        <result column="superior" property="superior"/>
+        <result column="proxy" property="proxy"/>
+        <result column="status" property="status"/>
+        <result column="revision" property="revision"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="updated_by" property="updatedBy"/>
+        <result column="updated_time" property="updatedTime"/>
+    </resultMap>
+</mapper>

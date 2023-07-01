@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.unbug.autosign.mapper.SignHistoryMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="SignHistoryResultMap" type="cn.unbug.autosign.entity.SignHistory">
+        <result column="id" property="id"/>
+        <result column="sign_id" property="signId"/>
+        <result column="check_in_status" property="checkInStatus"/>
+        <result column="check_in_content" property="checkInContent"/>
+        <result column="revision" property="revision"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="updated_by" property="updatedBy"/>
+        <result column="updated_time" property="updatedTime"/>
+    </resultMap>
+    <!--获取最近一次打卡-->
+    <select id="queryLatestHistory" resultMap="SignHistoryResultMap">
+        select s.*
+        from sign_history s
+        where s.sign_id = #{id}
+        order by s.created_time desc limit 1
+    </select>
+</mapper>
